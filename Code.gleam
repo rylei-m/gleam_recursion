@@ -28,13 +28,56 @@ pub fn main() {
 }
 
 pub fn counting_numbers(n: Int) -> List(Int) {
-
+  if n < 1 {
+    []
+  } else {
+    counting_from(1, n)
+  }
 }
+
+fn counting_from(current: Int, n: Int) -> List(Int) {
+  if current > n {
+    []
+  } else {
+    [current, ..counting_from(current + 1, n)]
+  }
+}
+
 
 pub fn prime_numbers(n: Int) -> List(Int) {
-
+  if n < 2 {
+    []
+  } else {
+    sieve(counting_from_prime(2, n))
+  }
 }
 
+fn counting_from_prime(current: Int, n: Int) -> List(Int) {
+  if current > n {
+    []
+  } else {
+    [current, ..counting_from_prime(current + 1, n)]
+  }
+}
+
+fn sieve(numbers: List(Int)) -> List(Int) {
+  case numbers {
+    [] -> []
+    [first, ..rest] -> [first, ..sieve(remove_multiples(rest, first))]
+  }
+}
+
+fn remove_multiples(numbers: List(Int), p: Int) -> List(Int) {
+  case numbers {
+    [] -> []
+    [first, ..rest] ->
+      if int.modulo(first, p) == 0 {
+        remove_multiples(rest, p)
+      } else {
+        [first, ..remove_multiples(rest, p)]
+      }
+  }
+}
 
 pub fn lists_of_numbers(n: Int, f: fn(Int)->List(Int)) -> List(List(Int)) {
 
