@@ -80,7 +80,23 @@ fn remove_multiples(numbers: List(Int), p: Int) -> List(Int) {
 }
 
 pub fn lists_of_numbers(n: Int, f: fn(Int)->List(Int)) -> List(List(Int)) {
+  if n < 1 {
+    []
+  } else {
+    build_lists(1, n, f)
+  }
+}
 
+fn build_lists(
+  current: Int, 
+  n: Int, 
+  f: fn(Int) -> List(Int),
+) -> List(List(Int)) {
+  if current > n {
+    []
+  } else {
+    [f(current), ..build_lists(current + 1, n, f)]
+  }
 }
 
 pub fn can_reach(from: Int, to: Int, a: List(List(Int))) -> Result(List(List(Int)), BacktrackState) {
