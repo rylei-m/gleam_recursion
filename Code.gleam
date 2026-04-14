@@ -50,7 +50,7 @@ pub fn prime_numbers(n: Int) -> List(Int) {
 }
 
 fn counting_from_prime(current: Int, n: Int) -> List(Int) {
-  if current > n {
+  case current > n {
     True -> []
     False -> [current, ..counting_from_prime(current + 1, n)]
   }
