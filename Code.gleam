@@ -70,6 +70,7 @@ fn remove_multiples(numbers: List(Int), p: Int) -> List(Int) {
       case int.modulo(first, p) {
         Ok(0) -> remove_multiples(rest, p)
         Ok(_) -> [first, ..remove_multiples(rest, p)]
+        Error(_) -> [first, ..remove_multiples(rest, p)]
       }
   }
 }
