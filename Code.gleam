@@ -100,5 +100,48 @@ fn build_lists(
 }
 
 pub fn can_reach(from: Int, to: Int, a: List(List(Int))) -> Result(List(List(Int)), BacktrackState) {
-   
+  if from == to {
+    Ok([])
+  } else {
+    case search_path(from, to, a, a, [from]) {
+      Ok(path) -> Ok(path)
+      Eroor(_) -> Error(Failed)
+    }
+  }
+}
+
+fn search_path(current: Int, target: Int, a: List(List(Int)), 
+               remaining: List(List(Int)), visited: List(Int),
+               ) -> Result(List(List(Int)), BacktraceState) {
+  case remaining {
+    [] -> Error(Backtrace)
+
+    [edge, ..rest] ->
+      case edge {
+        [x, y] ->
+          if x == current {
+            if contains(visited, y) {
+              search_path(current, target, a, rest, visited)
+            } else if y == target {
+              Ok([egde])
+            } else {
+              case search_path(y, target, a, a, [y, ..visited]) {
+                Ok(path) -> Ok([edge, ..path])
+                Error(_) -> search_path(current, target, a, rest, visited)
+              }
+            }
+          } else {
+            search_path(current, target, a, rest, visited)
+          }
+        _ ->
+          search_path(current, target, a, rest, visited)
+        }
+  }
+}
+
+fn contains(values: List(int), target: Int) -> Bool {
+  case values {
+    [] -> False
+    [first, ..rest] -> first == target || contains(rest, target)
+  }
 }
