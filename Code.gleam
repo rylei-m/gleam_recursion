@@ -28,35 +28,31 @@ pub fn main() {
 }
 
 pub fn counting_numbers(n: Int) -> List(Int) {
-  if n < 1 {
-    []
-  } else {
-    counting_from(1, n)
+  case n < 1 {
+    True -> []
+    False -> counting_from(1, n)
   }
 }
 
 fn counting_from(current: Int, n: Int) -> List(Int) {
-  if current > n {
-    []
-  } else {
-    [current, ..counting_from(current + 1, n)]
+  case current > n {
+    True -> []
+    False -> [current, ..counting_from(current + 1, n)]
   }
 }
 
 
 pub fn prime_numbers(n: Int) -> List(Int) {
-  if n < 2 {
-    []
-  } else {
-    sieve(counting_from_prime(2, n))
+  case n < 2 {
+    True -> []
+    False -> sieve(counting_from_prime(2, n))
   }
 }
 
 fn counting_from_prime(current: Int, n: Int) -> List(Int) {
   if current > n {
-    []
-  } else {
-    [current, ..counting_from_prime(current + 1, n)]
+    True -> []
+    False -> [current, ..counting_from_prime(current + 1, n)]
   }
 }
 
@@ -71,19 +67,17 @@ fn remove_multiples(numbers: List(Int), p: Int) -> List(Int) {
   case numbers {
     [] -> []
     [first, ..rest] ->
-      if int.modulo(first, p) == 0 {
-        remove_multiples(rest, p)
-      } else {
-        [first, ..remove_multiples(rest, p)]
+      case int.modulo(first, p) == 0 {
+        True -> remove_multiples(rest, p)
+        False -> [first, ..remove_multiples(rest, p)]
       }
   }
 }
 
 pub fn lists_of_numbers(n: Int, f: fn(Int)->List(Int)) -> List(List(Int)) {
-  if n < 1 {
-    []
-  } else {
-    build_lists(1, n, f)
+  case n < 1 {
+    True -> []
+    False -> build_lists(1, n, f)
   }
 }
 
@@ -92,18 +86,16 @@ fn build_lists(
   n: Int, 
   f: fn(Int) -> List(Int),
 ) -> List(List(Int)) {
-  if current > n {
-    []
-  } else {
-    [f(current), ..build_lists(current + 1, n, f)]
+  case current > n {
+    True -> []
+    False -> [f(current), ..build_lists(current + 1, n, f)]
   }
 }
 
 pub fn can_reach(from: Int, to: Int, a: List(List(Int))) -> Result(List(List(Int)), BacktrackState) {
-  if from == to {
-    Ok([])
-  } else {
-    case search_path(from, to, a, a, [from]) {
+  case from == to {
+    True -> Ok([])
+    False -> case search_path(from, to, a, a, [from]) {
       Ok(path) -> Ok(path)
       Error(_) -> Error(Failed)
     }
@@ -119,22 +111,23 @@ fn search_path(current: Int, target: Int, a: List(List(Int)),
     [edge, ..rest] ->
       case edge {
         [x, y] ->
-          if x == current {
-            if contains(visited, y) {
-              search_path(current, target, a, rest, visited)
-            } else if y == target {
-              Ok([edge])
-            } else {
-              case search_path(y, target, a, a, [y, ..visited]) {
-                Ok(path) -> Ok([edge, ..path])
-                Error(_) -> search_path(current, target, a, rest, visited)
+          case x == current {
+            True ->
+              case contains(visited, y) {
+                True -> search_path(current, target, a, rest, visited)
+                False ->
+                  case y == target {
+                    True -> Ok([edge])
+                    False -> 
+                      case search_path(y, target, a, a, [y, ..visited]) {
+                        Ok(path) -> Ok([edge, ..path])
+                        Error(_) -> search_path(current, target, a, rest, visited)
+                      }
+                  }
               }
-            }
-          } else {
-            search_path(current, target, a, rest, visited)
+            False -> search_path(current, target, a, rest, visited)
           }
-        _ ->
-          search_path(current, target, a, rest, visited)
+        _ -> search_path(current, target, a, rest, visited)
         }
   }
 }
